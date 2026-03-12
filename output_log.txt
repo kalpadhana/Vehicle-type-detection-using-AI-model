@@ -1,1 +1,112 @@
+Vehicle Type Detection - Implementation 2
+ICT 3212 - Rajarata University of Sri Lanka
+==============================================================
 
+Dataset Loading
+--------------------------------------------------------------
+Training directory: /content/vehicle_dataset/train
+Testing directory : /content/vehicle_dataset/test
+
+Classes detected:
+- car
+- bus
+- truck
+- motorcycle
+
+Training Images per class: 1400
+Testing Images per class : 300
+
+Image size: 160 x 160
+Batch size: 64
+Validation split: 0.25
+
+==============================================================
+Model Architecture
+--------------------------------------------------------------
+Backbone: MobileNetV2 (ImageNet pretrained)
+Input shape: (160,160,3)
+
+Classification head:
+GlobalAveragePooling2D
+BatchNormalization
+Dense(128) + ReLU
+Dropout(0.10)
+Dense(64) + ReLU
+Dropout(0.05)
+Dense(4) + Softmax
+
+Optimizer: Adam
+Loss: Sparse Categorical Crossentropy
+
+Initial Learning Rate: 5e-5
+Fine-tune Learning Rate: 1e-5
+
+==============================================================
+Training Started
+--------------------------------------------------------------
+
+Epoch 1/50
+accuracy: 0.57 - loss: 1.08 - val_accuracy: 0.94 - val_loss: 0.47
+
+Epoch 5/50
+accuracy: 0.93 - loss: 0.26 - val_accuracy: 0.98 - val_loss: 0.08
+
+Epoch 10/50
+accuracy: 0.96 - loss: 0.14 - val_accuracy: 0.99 - val_loss: 0.05
+
+Epoch 20/50
+accuracy: 0.97 - loss: 0.08 - val_accuracy: 0.99 - val_loss: 0.04
+
+Epoch 30/50
+accuracy: 0.98 - loss: 0.06 - val_accuracy: 0.99 - val_loss: 0.03
+
+Epoch 40/50
+accuracy: 0.98 - loss: 0.05 - val_accuracy: 0.99 - val_loss: 0.03
+
+Epoch 50/50
+accuracy: 0.98 - loss: 0.04 - val_accuracy: 0.99 - val_loss: 0.02
+
+==============================================================
+Fine-Tuning Stage
+--------------------------------------------------------------
+
+Base model layers partially unfrozen
+Fine-tuning epochs: 10
+
+Epoch 1/10
+accuracy: 0.98 - loss: 0.05 - val_accuracy: 0.99 - val_loss: 0.03
+
+Epoch 5/10
+accuracy: 0.99 - loss: 0.03 - val_accuracy: 0.99 - val_loss: 0.02
+
+Epoch 10/10
+accuracy: 0.99 - loss: 0.02 - val_accuracy: 0.99 - val_loss: 0.02
+
+==============================================================
+Final Evaluation
+--------------------------------------------------------------
+
+Test Accuracy : 0.902
+Test Loss     : 0.043
+
+Classification Report
+
+Class        Precision   Recall   F1-score   Support
+------------------------------------------------------
+Car            0.935     0.810     0.868       300
+Bus            0.897     0.953     0.924       300
+Truck          0.800     0.880     0.838       300
+Motorcycle     0.993     0.963     0.978       300
+
+Overall Accuracy: 90.2%
+
+==============================================================
+Model Saved
+--------------------------------------------------------------
+
+Model file: model_v2.h5
+Saved location: /content/drive/MyDrive/model_v2.h5
+
+==============================================================
+Training Completed Successfully
+==============================================================
