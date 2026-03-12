@@ -1,24 +1,8 @@
-# Model weights
-*.h5
-*.keras
-*.pb
-*.ckpt
-
-# Dataset files (too large for GitHub)
-*.zip
-vehicle_dataset/
-dataset/
-
-# Python
+# Python cache
 __pycache__/
 *.py[cod]
 *.pyo
 *.pyd
-.Python
-*.egg-info/
-dist/
-build/
-.eggs/
 
 # Jupyter Notebook checkpoints
 .ipynb_checkpoints/
@@ -26,18 +10,35 @@ build/
 # Virtual environments
 venv/
 env/
-.venv/
+ENV/
 
-# IDE / OS
-.vscode/
-.idea/
+# OS generated files
 .DS_Store
 Thumbs.db
-*.swp
-
-# Google Drive / Colab
-drive/
-content/
 
 # Logs
 *.log
+
+# Large model files (optional)
+*.h5
+*.keras
+
+# Dataset files
+dataset/
+vehicle_dataset/
+*.zip
+
+# Google Colab temporary files
+/content/
+
+# IDE files
+.vscode/
+.idea/
+
+# Python build files
+build/
+dist/
+*.egg-info/
+
+# Environment variables
+.env
