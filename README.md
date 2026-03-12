@@ -1,171 +1,263 @@
-# 🚗 Vehicle Type Detection Using Image Classification (CNN)
+# 🚗 Vehicle Type Detection Using Deep Learning (MobileNetV2)
+ICT 3212 – Rajarata University of Sri Lanka | Department of Computing
 
-**ICT 3212 – Rajarata University of Sri Lanka | Department of Computing**
+This project implements a deep learning system to classify vehicle images into **four categories: Car, Bus, Truck, and Motorcycle** using **Transfer Learning with MobileNetV2**.
 
-A Convolutional Neural Network (CNN) built with TensorFlow/Keras to classify vehicle images into 4 categories: **Car, Bus, Truck, and Motorcycle**.
+The goal of this project is to improve vehicle classification performance by comparing a **baseline CNN model (Implementation 1)** with an **improved transfer learning model (Implementation 2)**.
 
 ---
 
-## 📋 Project Overview
+# 📋 Project Overview
 
-This project implements a custom CNN model trained on a labelled vehicle image dataset. The model applies data augmentation, batch normalization, dropout regularization, and learning rate scheduling to achieve strong generalization with minimal overfitting.
+Vehicle classification is an important task in **traffic monitoring systems, intelligent transportation systems, and smart city applications**.
 
-### Final Results
+This project focuses on improving model accuracy and generalization using modern deep learning techniques.
+
+Implementation 2 introduces several improvements over the baseline CNN:
+
+- Transfer learning using **MobileNetV2 pretrained on ImageNet**
+- Improved dataset preprocessing and cleaning
+- Data augmentation
+- Dropout regularization
+- Batch normalization
+- L2 weight regularization
+- Learning rate scheduling
+- Early stopping
+- Fine-tuning of pretrained layers
+
+These improvements significantly improved model performance and reduced overfitting.
+
+---
+
+# 🎯 Final Results
 
 | Metric | Value |
-|---|---|
-| Test Accuracy | **81.38%** |
-| Best Validation Accuracy | **86.62%** |
-| Training Accuracy | **91.69%** |
-| Train/Val Gap | 5.06% *(Mild – acceptable)* |
-| Epochs Trained | 30 / 30 |
-
-### Per-Class Test Accuracy
-
-| Class | Correct / Total | Accuracy |
-|---|---|---|
-| Car | 143 / 200 | 71.5% |
-| Bus | 196 / 200 | 98.0% |
-| Truck | 141 / 200 | 70.5% |
-| Motorcycle | 171 / 200 | 85.5% |
+|------|------|
+| Test Accuracy | **90.2%** |
+| Macro F1 Score | **0.902** |
+| Weighted F1 Score | **0.902** |
+| Training Accuracy | **~97%** |
+| Best Validation Accuracy | **~99%** |
+| Train/Validation Gap | **~2% (Very Low Overfitting)** |
 
 ---
 
-## 🏗️ Model Architecture
+# 📊 Per-Class Performance
 
-- **Input:** 128×128 RGB images
-- **3 Convolutional Blocks** – each with Conv2D + BatchNorm + MaxPooling + Dropout
-- **Dense Head** – Flatten → Dense(256) + BatchNorm + Dropout(0.40) → Softmax(4)
-- **Optimizer:** Adam (initial lr = 0.0008)
-- **Loss:** Categorical Cross-Entropy
+| Class | Precision | Recall | F1 Score | Support |
+|------|------|------|------|------|
+| Car | 0.935 | 0.810 | 0.868 | 300 |
+| Bus | 0.897 | 0.953 | 0.924 | 300 |
+| Truck | 0.800 | 0.880 | 0.838 | 300 |
+| Motorcycle | 0.993 | 0.963 | 0.978 | 300 |
 
-### Overfitting Fixes Applied
+### Key Observations
 
-| Parameter | Before | After |
-|---|---|---|
-| Batch size | 32 | **64** |
-| Dropout (blocks 1 & 2) | 0.25 | **0.20** |
-| Dropout (head) | 0.50 | **0.40** |
-| Learning rate | 0.0005 | **0.0008** |
-| Augmentation ranges | Higher | **Reduced** |
-| EarlyStopping patience | 8 | **7** |
-| ReduceLROnPlateau patience | 4 | **3** |
+- **Motorcycle classification achieved the highest performance.**
+- **Bus detection also performed strongly with high recall.**
+- Some confusion occurs between **car and truck classes** due to visual similarity.
 
 ---
 
-## 📁 Repository Structure
+# 🏗️ Model Architecture
 
-```
-├── Vehicle_Type_Detection_Using_Image_Classification_implementation_1.ipynb
-│       Main notebook – data setup, model training, evaluation
-├── output_log.txt
-│       Full training output log (all cell outputs)
-├── requirements.txt
-│       Python dependencies
-├── .gitignore
-│       Files excluded from version control
-└── README.md
-        This file
-```
+The model uses **MobileNetV2** as a feature extractor with a custom classification head.
 
----
+### Input
 
-## 🚀 Getting Started
+### Architecture
 
-### 1. Clone the Repository
+Input Image
+│
+Data Augmentation
+│
+MobileNetV2 (Pretrained Backbone)
+│
+GlobalAveragePooling2D
+│
+BatchNormalization
+│
+Dense (128) + ReLU
+│
+Dropout (0.10)
+│
+Dense (64) + ReLU
+│
+Dropout (0.05)
+│
+Dense (4) + Softmax
 
-```bash
-git clone https://github.com/<your-username>/vehicle-type-detection.git
-cd vehicle-type-detection
-```
 
-### 2. Install Dependencies
+### Advantages
 
-```bash
-pip install -r requirements.txt
-```
-
-### 3. Dataset Setup
-
-The notebook expects a `vehicle_dataset.zip` stored in Google Drive at:
-```
-/content/drive/MyDrive/vehicle_dataset.zip
-```
-
-The dataset should contain `train/` and `test/` splits with subdirectories for each class:
-```
-vehicle_dataset/
-├── train/
-│   ├── car/
-│   ├── bus/
-│   ├── truck/
-│   └── motorcycle/
-└── test/
-    ├── car/
-    ├── bus/
-    ├── truck/
-    └── motorcycle/
-```
-
-### 4. Run the Notebook
-
-Open the notebook in **Google Colab** for best results (GPU recommended):
-
-[![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/)
+- Faster convergence
+- Better feature extraction
+- Reduced overfitting
+- Improved generalization
 
 ---
 
-## 📊 Training Configuration
+# ⚙️ Training Configuration
 
 | Parameter | Value |
-|---|---|
-| Image size | 128 × 128 |
-| Batch size | 64 |
-| Max epochs | 30 |
-| Validation split | 20% |
-| Number of classes | 4 |
-
-### Data Augmentation (Training Only)
-
-- Rotation: ±15°
-- Width/Height shift: ±15%
-- Shear: 10%
-- Zoom: ±15%
-- Horizontal flip: Yes
-- Brightness: [0.85, 1.15]
-- Channel shift: 15.0
+|------|------|
+| Image Size | 160 × 160 |
+| Batch Size | 64 |
+| Initial Epochs | 50 |
+| Fine-Tuning Epochs | 10 |
+| Validation Split | 25% |
+| Optimizer | Adam |
+| Initial Learning Rate | 5e-5 |
+| Fine-Tune Learning Rate | 1e-5 |
+| Loss Function | Sparse Categorical Crossentropy |
+| Number of Classes | 4 |
 
 ---
 
-## 📈 Training Progress (Key Epochs)
+# 🔄 Dataset Preparation
 
-| Epoch | Train Acc | Val Acc |
-|---|---|---|
-| 1 | 49.3% | 25.0% |
-| 10 | 86.2% | 48.5% |
-| 15 | 85.9% | 81.4% |
-| 19 | 87.9% | 85.5% |
-| 30 | 91.5% | **86.6%** |
+The dataset was cleaned before training by:
+
+- Removing corrupted image files
+- Removing unsupported file formats
+- Validating images using TensorFlow decode
+- Standardizing class folder names
+- Resizing images to **160 × 160**
+
+### Dataset Distribution
+
+| Class | Training Images | Testing Images |
+|------|------|------|
+| Car | 1400 | 300 |
+| Bus | 1400 | 300 |
+| Truck | 1400 | 300 |
+| Motorcycle | 1400 | 300 |
+
+Balanced classes help prevent model bias.
 
 ---
 
-## 🛠️ Technologies Used
+# 🔀 Data Augmentation
 
-- Python 3.12
+Data augmentation was applied only to the training dataset.
+
+Techniques used:
+
+- Horizontal Flip
+- Small Rotation
+- Random Zoom
+- Random Transformations
+
+This helps increase dataset diversity and improve model robustness.
+
+---
+
+# 📈 Training Graphs
+
+Training and validation performance during training:
+
+![Training Graphs](images/training_graphs.png)
+
+---
+
+# 📊 Confusion Matrix
+
+Confusion matrix for the final model:
+
+![Confusion Matrix](images/confusion_matrix.png)
+
+Most predictions fall along the **diagonal**, indicating correct classifications.
+
+---
+
+# 🖼️ Sample Predictions
+
+Example predictions generated by the model:
+
+![Sample Predictions](images/sample_predictions.png)
+
+---
+
+# 📁 Repository Structure
+vehicle-type-detection
+│
+├── Vehicle_Type_Detection_Implementation_2.ipynb
+│ Main notebook – training and evaluation
+│
+├── images/
+│ ├── training_graphs.png
+│ ├── confusion_matrix.png
+│ └── sample_predictions.png
+│
+├── model_v2.h5
+│ Final trained model
+│
+├── requirements.txt
+│ Python dependencies
+│
+├── .gitignore
+│ Files excluded from version control
+│
+└── README.md
+Project documentation
+
+---
+
+# 🚀 Getting Started
+
+### 1️⃣ Clone the Repository
+
+### 2️⃣ Install Dependencies
+
+---
+
+### 3️⃣ Dataset Setup
+
+The notebook expects a dataset stored in Google Drive:
+
+Dataset structure:
+vehicle_dataset
+├── train
+│ ├── car
+│ ├── bus
+│ ├── truck
+│ └── motorcycle
+│
+└── test
+├── car
+├── bus
+├── truck
+└── motorcycle
+
+
+---
+
+### 4️⃣ Run the Notebook
+
+Recommended environment:
+
+**Google Colab (GPU enabled)**
+
+Open the notebook and run all cells.
+
+---
+
+# 🛠️ Technologies Used
+
+- Python
 - TensorFlow / Keras
 - NumPy
 - Matplotlib
 - Seaborn
 - scikit-learn
-- Google Colab + Google Drive
+- Google Colab
+- MobileNetV2 (Transfer Learning)
 
 ---
 
-## 📄 License
+# 📄 License
 
-This project is for academic purposes – **ICT 3212**, Rajarata University of Sri Lanka.
-## 📄model
+This project was developed for **academic purposes** for the course:
 
-full model dawnload here
-go to the link-
-https://drive.google.com/file/d/1g8irGjA80TeudjSmVOoPv_9JsfkZx3M_/view?usp=sharing
+**ICT 3212 – Rajarata University of Sri Lanka  
+Department of Computing**
