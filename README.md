@@ -67,26 +67,22 @@ The model uses **MobileNetV2** as a feature extractor with a custom classificati
 
 ### Architecture
 
-Input Image
-│
-Data Augmentation
-│
-MobileNetV2 (Pretrained Backbone)
-│
-GlobalAveragePooling2D
-│
-BatchNormalization
-│
-Dense (128) + ReLU
-│
-Dropout (0.10)
-│
-Dense (64) + ReLU
-│
-Dropout (0.05)
-│
-Dense (4) + Softmax
+```mermaid
+graph TD
+A[Input Image 160x160x3]
+B[Data Augmentation]
+C[MobileNetV2 Pretrained Backbone]
+D[GlobalAveragePooling2D]
+E[BatchNormalization]
+F[Dense 128 + ReLU]
+G[Dropout 0.10]
+H[Dense 64 + ReLU]
+I[Dropout 0.05]
+J[Dense 4 + Softmax]
+K[Output: Car Bus Truck Motorcycle]
 
+A --> B --> C --> D --> E --> F --> G --> H --> I --> J --> K
+```
 
 ### Advantages
 
